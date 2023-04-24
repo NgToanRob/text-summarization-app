@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+# App/chatbot
+app/chatbot/__pycache__/
+# app/facebook
+app/facebook/__pycache__/
+
+# env
+app/env/
+
+# Production dockerfile
+app/Dockerfile.prod
+
+
+# dev environments
+.env.prod
+.env.prod.db
+
+# docker compose 
+docker-compose.prod.yml
+
+
+# entrypoint
+app/entrypoint.prod.sh
+
+# dockerignore
+
+# ngrok
+ngrok
+
+# nginx
+nginx
+
+# mount database
+data
