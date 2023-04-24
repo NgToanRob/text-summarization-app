@@ -8,28 +8,6 @@ app/facebook/__pycache__/
 # env
 app/env/
 
-# Production dockerfile
-app/Dockerfile.prod
-
-
-# dev environments
-.env.prod
-.env.prod.db
-
-# docker compose 
-docker-compose.prod.yml
-
-
-# entrypoint
-app/entrypoint.prod.sh
-
-# dockerignore
-
-# ngrok
-ngrok
-
-# nginx
-nginx
 
 # mount database
 data
