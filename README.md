@@ -21,11 +21,7 @@ The contribute feature in web app allows you to help us collect more quality dat
 
 ![Image demo contribute](docs/images/contribute.png)
 
-I created a database management tool called pgAdmin4. This tool allows us to manage all of the data that our clients contribute. I have included the default account credentials for logging into pgAdmin4 in the `.env.dev` file. 
-
-![Image](docs/images/login-pgadmin.png)
-
-We have a simple query like this:
+I created a database management tool called pgAdmin4. This tool allows us to manage all of the data that our clients contribute. I have included the default account credentials for logging into pgAdmin4 in the `.env.dev` file. We have a simple query like this:
 
 ![Contributed data](docs/images/database.png)
 
@@ -33,28 +29,42 @@ We have a simple query like this:
 ## Installation
 Here are instructions for installing, using and developing more features:
 ### Development
-1. Backend:
-    - Clone project
-    - Build docker compose and up them 
-    - makemigrations and migrate
-    - Login pgadmin4 to mamage database with default account `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in `.env.dev` file
-    - Should use docker desktop to see log of containers
+#### 1. Clone project
+```
+git clone https://github.com/NgToanRob/django-text-summarization.git
+```
+
+Download ONNX model in the [link](https://drive.google.com/file/d/1nCHJJ8ZilX7KNno0r1gIOkXu5U9u9foW/view?usp=sharing)
+
+Extract `onnx.zip` to `app/bot/` directory.
+
+#### 2. Build docker compose and up them in background mode
+This process takes a long time to build the images from scratch.
+```
+docker-compose up -d -build
+```
+#### 3. Makemigrations and migrate on first app launch
+This process interferes with running containers, it is quite heavy so it takes a few seconds to work
+```
+docker-compose exec summarizerbot python manage.py makemigrations
+docker-compose exec summarizerbot python manage.py migrate --noinput
+```
 
 
-2. Frontend:
-    - Clone project 
-    - Build docker image and up it
-    - Launch GUI with the [link](http://127.0.0.1:7860/)
+
+
+#### 5. Let's experience it with the features
+- Launch GUI with url [http://localhost:5000](http://localhost:5000)
+- Should use docker desktop to see log of containers
+![Image ogs](docs/images/logs.png)
+- Login pgadmin4 to mamage database with url [http://localhost:8080](http://localhost:8080)
+![Image login](docs/images/login-pgadmin.png)
+
+The default account is available in the file `.env.dev` with the names `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD`
 
 ### Production
 I will do when I have money in my account to rent the cloud :)). But it's also simple to do as I have created more nginx app for proxy in docker-compose.prod.yml
 
-Need to collect all static files before rendering
-```
-$ docker-compose -f docker-compose.prod.yml up -d --build
-$ docker-compose -f docker-compose.prod.yml exec summarizerbot python manage.py migrate --noinput
-$ docker-compose -f docker-compose.prod.yml exec summarizerbot python manage.py collectstatic --no-input --clear
-```
 
 ## Common problems
 Exits running app in port 5432
