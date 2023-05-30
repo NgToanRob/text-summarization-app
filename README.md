@@ -63,7 +63,7 @@ docker-compose exec summarizerbot python manage.py migrate --noinput
 The default account is available in the file `.env.dev` with the names `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD`
 
 ### Production
-I will do when I have money in my account to rent the cloud :)). But it's also simple to do as I have created more nginx app for proxy in docker-compose.prod.yml
+I will do when I have money in my account to rent the cloud :))
 
 
 ## Common problems
