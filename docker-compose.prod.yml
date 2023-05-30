@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgres:
@@ -12,15 +12,15 @@ services:
     ports:
       - 5432:5432
 
-  chatbot:
-    container_name: chatbot
+  summarizerbot:
+    container_name: summarizerbot
     build:
       context: ./app
       dockerfile: Dockerfile.prod
-    command: gunicorn chatbot.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn summarizerbot.wsgi:application --bind 0.0.0.0:8000
     restart: always
     volumes:
-      - ./app/:/usr/src/app/
+      - static_volume:/home/app/summarizerbot/staticfiles
     expose:
       - 8000
     env_file:
@@ -43,8 +43,13 @@ services:
     container_name: nginx
     build: ./nginx
     restart: always
+    volumes:
+      - static_volume:/home/app/summarizerbot/staticfiles
     ports:
       - 1337:80
     depends_on:
-      - chatbot
+      - summarizerbot
 
+volumes:
+  postgres_data:
+  static_volume:

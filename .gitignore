@@ -1,13 +1,13 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
-# App/chatbot
-app/chatbot/__pycache__/
-# app/facebook
-app/facebook/__pycache__/
+app/bot/__pycache__/
+app/summarizerbot/__pycache__/
 
 # env
-app/env/
-
+app/venv/
+gradio/venv
 
 # mount database
-data
+data/
+
+# model onnx
+app/bot/onnx/

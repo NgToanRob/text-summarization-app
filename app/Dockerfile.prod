@@ -20,7 +20,7 @@ RUN apk update \
 RUN pip install --upgrade pip
 RUN pip install flake8==3.9.2
 COPY . .
-RUN flake8 --ignore=E501,F401 .
+RUN flake8 --ignore=E501,F401 . --exclude venv
 
 # install dependencies
 COPY ./requirements.txt .
@@ -43,8 +43,9 @@ RUN addgroup -S app && adduser -S app -G app
 
 # create the appropriate directories
 ENV HOME=/home/app
-ENV APP_HOME=/home/app/chatbot
+ENV APP_HOME=/home/app/summarizerbot
 RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
 WORKDIR $APP_HOME
 
 # install dependencies
@@ -68,4 +69,4 @@ RUN chown -R app:app $APP_HOME
 USER app
 
 # run entrypoint.prod.sh
-ENTRYPOINT ["/home/app/chatbot/entrypoint.prod.sh"]
+ENTRYPOINT ["/home/app/summarizerbot/entrypoint.prod.sh"]

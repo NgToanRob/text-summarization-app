@@ -1,82 +1,84 @@
-# Chatbot using webhook in Django
+# Text Summarization Web App
 
-## Folder structure
+## Overview
 
-This repository contains a Django project packaged in Docker Compose with PostgreSQL, PgAdmin4, and Nginx. The project structure is as follows:
+This is a web app for text summarization. It was created as part of the pre-entrance test for Cinnamon AI Bootcamp. The app has two parts: a demo front end with the Gradio framework, and a back end with Django. The back end also uses two apps for managing the database: PostgreSQL and pgAdmin4. In production, the app also uses an Nginx proxy.
 
-```linux
-├── app
-│   ├── chatbot
-│   ├── db.sqlite3
-│   ├── Dockerfile
-│   ├── Dockerfile.prod
-│   ├── .dockerignore
-│   ├── entrypoint.prod.sh
-│   ├── entrypoint.sh
-│   ├── facebook
-│   ├── manage.py
-│   ├── requirements.txt
-│   └── static
-├── data
-├── docker-compose.prod.yml
-├── docker-compose.yml
-├── .env.dev
-├── .env.prod
-├── .env.prod.db
-├── .gitignore
-├── nginx
-│   ├── Dockerfile
-│   └── nginx.conf
-└── README.md
+The core tech of this app is [ViT5-Base Finetuned on vietnews Abstractive Summarization (No prefix needed)](https://huggingface.co/VietAI/vit5-base-vietnews-summarization). I used 2 technologies of optimum with onnx runtime of huggingface to reduce size and improve speed for inferencing. The first is optimization  rebuilds the computation graph and the second is floating-point quantization.In this [notebook](app/bot/model/onnx.ipynb) is a guide on how to make a more productive inferenceable model using the optimum library.
+
+## Features
+There are two increments in this simple application, summarize and contribute
+
+1. Summarization
+
+The summarization feature in web app allows you to quickly and easily summarize any text, article, or document. Simply enter the text you want to summarize into the text box and click the "Submit" button. The app will then generate a summary of the text in one second.
+
+![Image demo summarize](docs/images/summarize.jpg)
+
+2. Contribute
+
+The contribute feature in web app allows you to help us collect more quality data for our next training. Simply enter the long text and summary of the text into the text boxes and click the "Contribute" button. The app will then store the data in our database and we will be able to use it to improve our text summarization model.
+
+![Image demo contribute](docs/images/contribute.png)
+
+I created a database management tool called pgAdmin4. This tool allows us to manage all of the data that our clients contribute. I have included the default account credentials for logging into pgAdmin4 in the `.env.dev` file. 
+
+![Image](docs/images/login-pgadmin.png)
+
+We have a simple query like this:
+
+![Contributed data](docs/images/database.png)
+
+
+## Installation
+Here are instructions for installing, using and developing more features:
+### Development
+1. Backend:
+    - Clone project
+    - Build docker compose and up them 
+    - makemigrations and migrate
+    - Login pgadmin4 to mamage database with default account `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in `.env.dev` file
+    - Should use docker desktop to see log of containers
+
+
+2. Frontend:
+    - Clone project 
+    - Build docker image and up it
+    - Launch GUI with the [link](http://127.0.0.1:7860/)
+
+### Production
+I will do when I have money in my account to rent the cloud :)). But it's also simple to do as I have created more nginx app for proxy in docker-compose.prod.yml
+
+Need to collect all static files before rendering
+```
+$ docker-compose -f docker-compose.prod.yml up -d --build
+$ docker-compose -f docker-compose.prod.yml exec summarizerbot python manage.py migrate --noinput
+$ docker-compose -f docker-compose.prod.yml exec summarizerbot python manage.py collectstatic --no-input --clear
 ```
 
-The `app` folder contains the Django project, with the `chatbot` app as the main application. The `Dockerfile` and `Dockerfile.prod` files are used to build the Docker images for development and production environments respectively. The `entrypoint.sh` and `entrypoint.prod.sh` scripts are used as entry points for the containers. The `requirements.txt` file contains the Python dependencies required for the project.
-
-The `data` folder is used to persist the PostgreSQL database data.
-
-The `docker-compose.yml` file is used to set up the development environment, and the `docker-compose.prod.yml `file is used for the production environment. The .`env.dev` and `.env.prod` files contain environment variables for the development and production environments respectively. The `.env.prod.db `file contains the PostgreSQL environment variables for the production environment.
-
-The `nginx` folder contains the Nginx configuration and `Dockerfile` for serving the static files and proxying requests to the Django application.
-
-## Running the Project
-
-To run the project, first make sure that Docker and Docker Compose are installed on your system.
-
-For the development environment, build/re-build and run in the background following command:
-
+## Common problems
+Exits running app in port 5432
 ```
-docker-compose up -d --build
+sudo lsof -i -P -n | grep 5432
+sudo kill <process id>
 ```
 
-For the production environment, build/re-build and run in the background following command:
+## Video content
+- demo GUI and all features
+- Intallation of backend and frontend for development:
+    - Backend:
+        - Clone project
+        - Build docker compose and up them 
+        - makemigrations and migrate
+        - Login pgadmin4 to mamage database with default account `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in `.env.dev` file
+        - Should use docker desktop to see log of containers
+    - Frontend:
+        - Clone project 
+        - Build docker image and up it
+        - Launch GUI with the [link](http://127.0.0.1:7860/)
 
-```
-docker-compose -f docker-compose.prod.yml up -d --build
-```
 
-The application will be available at [http://localhost:8000](http://localhost:8000) (development) or [http://localhost:<NGINX_PORT>](http://localhost:1337) (production).
 
-PgAdmin4 is available at[http://localhost:<PGADMIN_PORT>](http://localhost:8080). The default email and password are `admin@chatbot.com` and `12345` respectively.
-
-## Contributing
-
-If you want to contribute to this project, please create a pull request with your changes.
-
-## Development Process
-
-1. Run ngrok to generate URL:
-   Run ngrok container and access to [localhost:4040](localhost:4040) to get ULR which has ssl (https://)
-2. Add `DJANGO_ALLOWED_HOSTS` in `env.dev` file
-3. Update Messenger Profile Properties with Postman
-
-```json
-curl -X POST -H "Content-Type: application/json" -d '{
-    "whitelisted_domains": [
-            "<New generated URL in Step 1>"
-        ],
-
-}' "https://graph.facebook.com/v16.0/me/messenger_profile?access_token=<PAGE_ACCESS_TOKEN>"
-```
 
 
 

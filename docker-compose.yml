@@ -1,3 +1,5 @@
+# This is version for development
+
 version: '3.9'
 
 services:
@@ -12,8 +14,8 @@ services:
     ports:
       - 5432:5432
 
-  chatbot:
-    container_name: chatbot
+  summarizerbot:
+    container_name: summarizerbot
     build: ./app
     command: python manage.py runserver 0.0.0.0:8000
     restart: always
@@ -37,3 +39,9 @@ services:
     depends_on:
       - postgres
 
+  gradio:
+    container_name: gradio
+    build: ./gradio
+    restart: always
+    ports:
+      - 5000:5000
