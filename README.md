@@ -41,7 +41,7 @@ Extract `onnx.zip` to `app/bot/` directory.
 #### 2. Build docker compose and up them in background mode
 This process takes a long time to build the images from scratch.
 ```
-docker compose up -d -build
+docker compose up -d --build
 ```
 #### 3. Makemigrations and migrate on first app launch
 This process interferes with running containers, it is quite heavy so it takes a few seconds to work
