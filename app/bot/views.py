@@ -15,9 +15,11 @@ class Summarizer:
     def __init__(self):
         self.tokenizer = AutoTokenizer.from_pretrained(ONNX_PATH)
         self.model = ORTModelForSeq2SeqLM.from_pretrained(
-            ONNX_PATH, file_name="model_optimized_quantized.onnx")
+            ONNX_PATH, file_name="model_optimized_quantized.onnx"
+        )
         self.pipeline = pipeline(
-            TASK, model=self.model, tokenizer=self.tokenizer)
+            TASK, model=self.model, tokenizer=self.tokenizer
+        )
 
     def summarize(self, text):
         output = self.pipeline(text + "</s>")
@@ -58,6 +60,18 @@ class FeedbackView(APIView):
     renderer_classes = [JSONRenderer]
 
     def post(self, request):
+        """
+        Creates a new Feedback object and saves it to the database, using the provided
+        text and summary fields from the request data. If no summary is provided, an 
+        empty string is used instead. Returns a Response object containing a message
+        thanking the user for their contribution and the summary of their feedback.
+        
+        Args:
+            request: A Django Rest Framework Request object
+
+        Returns:    
+            Response: A Django Rest Framework Response object with a message and summary
+        """
         text = request.data.get('text')
         summary = request.data.get('summary', '')
         feedback = Feedback(text=text, summary=summary)
@@ -65,4 +79,3 @@ class FeedbackView(APIView):
 
         response = summary + "\n\nThank you for your contributing!"
         return Response({'response': response})
-    

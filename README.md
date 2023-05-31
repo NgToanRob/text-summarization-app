@@ -41,13 +41,13 @@ Extract `onnx.zip` to `app/bot/` directory.
 #### 2. Build docker compose and up them in background mode
 This process takes a long time to build the images from scratch.
 ```
-docker-compose up -d -build
+docker compose up -d -build
 ```
 #### 3. Makemigrations and migrate on first app launch
 This process interferes with running containers, it is quite heavy so it takes a few seconds to work
 ```
-docker-compose exec summarizerbot python manage.py makemigrations
-docker-compose exec summarizerbot python manage.py migrate --noinput
+docker compose exec summarizerbot python manage.py makemigrations
+docker compose exec summarizerbot python manage.py migrate --noinput
 ```
 
 
@@ -73,19 +73,7 @@ sudo lsof -i -P -n | grep 5432
 sudo kill <process id>
 ```
 
-## Video content
-- demo GUI and all features
-- Intallation of backend and frontend for development:
-    - Backend:
-        - Clone project
-        - Build docker compose and up them 
-        - makemigrations and migrate
-        - Login pgadmin4 to mamage database with default account `PGADMIN_DEFAULT_EMAIL` and `PGADMIN_DEFAULT_PASSWORD` in `.env.dev` file
-        - Should use docker desktop to see log of containers
-    - Frontend:
-        - Clone project 
-        - Build docker image and up it
-        - Launch GUI with the [link](http://127.0.0.1:7860/)
+
 
 
 
